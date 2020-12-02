@@ -9,4 +9,10 @@ let main argv =
     
     let result = Day1.calculateProblem2 ()
     printfn "%d" result
+    
+    let result = Day2.calculateProblem1 ()
+    printfn "%d" result
+    
+    let result = Day2.calculateProblem2 ()
+    printfn "%d" result
     0 // return an integer exit code
