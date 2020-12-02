@@ -7,6 +7,8 @@ module Day1 =
         |> List.map int
         |> List.sort
         
+    // Note that this approach potentially counts the same element in the list twice, which
+    // might be problematic, luckily such a situation did not occur with the provided input.
     let calculate (goalValue: int) (input: int list) (nValues: int) : (int * int) Option =
         let mutable elements = List.zip input input
         for i in 2 .. nValues do
