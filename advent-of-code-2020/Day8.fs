@@ -35,3 +35,51 @@ module Day8 =
     let public calculateProblem1 () : int =
         let inp = Array.map (fun v -> (v, false)) inputValues
         computeRec1 0 0 inp
+        
+    let rec isFinite (i: int) (acc: int) (instructionArray: (Instruction * bool)[]): int option =
+        if i = Array.length instructionArray then
+            Some acc
+        else
+            let inst, b = instructionArray.[i]
+        
+            if b then
+                None
+            else
+                instructionArray.[i] <- (inst, true)
+                
+                match inst with
+                | Nop _ -> isFinite (i + 1) acc instructionArray
+                | Jmp j -> isFinite (i + j) acc instructionArray
+                | Acc v -> isFinite (i + 1) (acc + v)  instructionArray
+            
+
+    let rec computeRec2 (i: int) (acc: int) (instructionArray: (Instruction * bool)[]) : int =
+        if i = Array.length instructionArray then
+            acc
+        else
+            let inst, _ = instructionArray.[i]
+            instructionArray.[i] <- (inst, true)
+            
+            match inst with
+            | Nop v ->
+                // Act as if it were a Jmp
+                match isFinite (i + v)  acc instructionArray with
+                | Some res ->
+                    res
+                | None ->
+                    computeRec2 (i + 1) acc instructionArray
+            | Jmp v ->
+                // Act as if it were a Nop
+                match isFinite (i + 1)  acc instructionArray with
+                | Some res ->
+                    res
+                | None ->
+                    computeRec2 (i + v) acc instructionArray
+            | Acc v ->
+                computeRec2 (i + 1) (acc + v)  instructionArray
+                
+    let public calculateProblem2 () : int =
+        let inp = Array.map (fun v -> (v, false)) inputValues
+        computeRec2 0 0 inp
+
+    // TODO: consolidate functions
